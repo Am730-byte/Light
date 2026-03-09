@@ -1,0 +1,82 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+ 
+}
+
+enum UserRole {
+  USER
+  MANAGER
+  ADMIN
+}
+
+enum UserType {
+    STANDARD
+    PREMIUM
+}
+
+enum ExerciseType {
+    Cardio
+    Strength
+}
+
+enum EquipmentType {
+    Barbell 
+    Dumbbell
+    Machine
+}
+
+model User {
+    id String @id @default(uuid())
+    name String
+    userName String @unique
+    email String @unique
+    password String
+    createdAt DateTime @default(now())
+    role UserRole @default(USER)
+    type UserType @default(STANDARD)
+    workout WorkoutSession[]
+}
+
+model Exercise {
+  id String @id @default(uuid())
+  name String @unique
+  type ExerciseType
+  slug String @unique
+  equipment EquipmentType
+  instructions String?
+  createdAt DateTime @default(now())
+  SessionExercises SessionExercise[]
+}
+
+model SetLog {
+    id String @id @default(uuid())
+    sessionExerciseId String
+    sessionExercise SessionExercise @relation(fields: [sessionExerciseId], references: [id])
+    weight Float
+    set Int
+    rep Int
+
+}
+
+model WorkoutSession {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  date DateTime @default(now())
+  notes String?
+  exercises SessionExercise[]
+}
+
+
+model SessionExercise {
+  id String   @id @default(uuid())
+  sessionId String
+  session WorkoutSession @relation(fields: [sessionId], references: [id])
+  exerciseId String
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  sets        SetLog[]
+}
