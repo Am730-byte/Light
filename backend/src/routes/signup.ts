@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt"
-import { signupSchema } from "../schema/prisma";
-import prisma from "../schema/prisma";
+import { signupSchema } from "../schema/zodSchema";
+import prisma from "../schema/zodSchema";
 import jwt from "jsonwebtoken"
 
 
@@ -48,7 +48,7 @@ signupRouter.post("/signup", async (req, res) => {
             )
             
             const days = 15
-            res.cookie("accesstoken", token,{
+            res.cookie("token", token,{
                 httpOnly:true,
                 maxAge: days*24*60*60*1000,
                 sameSite:"strict",

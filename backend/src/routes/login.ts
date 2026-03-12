@@ -1,6 +1,6 @@
 import express from "express"
-import { loginSchema } from "../schema/prisma";
-import prisma from "../schema/prisma"
+import { loginSchema } from "../schema/zodSchema";
+import prisma from "../schema/zodSchema"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
@@ -40,7 +40,7 @@ try {
             )
          
             const days = 15;
-            res.cookie("logintoken",token,{
+            res.cookie("token",token,{
                 httpOnly: true,
                 maxAge: days*24*60*60*1000,
                 secure:false,

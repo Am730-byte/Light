@@ -18,15 +18,20 @@ enum UserType {
     PREMIUM
 }
 
-enum ExerciseType {
-    Cardio
-    Strength
+enum SourceType {
+  image
+  video
+  None
 }
 
 enum EquipmentType {
-    Barbell 
-    Dumbbell
-    Machine
+    BARBELL
+    DUMBBELL
+    MACHINE
+    RESISTANCE_BAND
+    NONE
+    OTHER
+    SUSPENSION
 }
 
 model User {
@@ -44,10 +49,13 @@ model User {
 model Exercise {
   id String @id @default(uuid())
   name String @unique
-  type ExerciseType
   slug String @unique
   equipment EquipmentType
+  primarymuscle String
+  secondarymuscle String[]
   instructions String?
+  source String?
+  sourcetype SourceType
   createdAt DateTime @default(now())
   SessionExercises SessionExercise[]
 }
