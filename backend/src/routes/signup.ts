@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt"
-import { signupSchema } from "../schema/zodSchema";
-import prisma from "../schema/zodSchema";
+import { signupSchema } from "../schema/zodSchema.ts";
+import prisma from "../lib/prisma.ts"
 import jwt from "jsonwebtoken"
 
 
@@ -38,6 +38,7 @@ signupRouter.post("/signup", async (req, res) => {
                 }
             })
             const secret = process.env.SECRETKEY
+            console.log(process.env.SECRETKEY)
             if(!secret){
                 return res.status(500).json({error: "Server Error"})
             }
@@ -59,7 +60,9 @@ signupRouter.post("/signup", async (req, res) => {
 
         }
     } catch (error) {
+        console.log(error)
         return res.status(500).json({error: "Try logging in again"})
+        
     }
     
 

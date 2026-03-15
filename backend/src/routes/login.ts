@@ -1,6 +1,6 @@
 import express from "express"
-import { loginSchema } from "../schema/zodSchema";
-import prisma from "../schema/zodSchema"
+import { loginSchema } from "../schema/zodSchema.ts";
+import prisma from "../lib/prisma.ts"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 

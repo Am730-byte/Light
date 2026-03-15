@@ -1,7 +1,4 @@
 import * as z from "zod";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient({});
-
 
 
 export const signupSchema = z.object({
@@ -17,4 +14,4 @@ export const loginSchema = z.object({
 
 })
 
-export default prisma;
+

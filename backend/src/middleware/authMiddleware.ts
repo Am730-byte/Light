@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express"
+import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
-import { JwtPayload } from "../types/JwtPayload"
+import type { JwtPayload } from "../types/JwtPayload.ts"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
      const secret = process.env.SECRETKEY;
