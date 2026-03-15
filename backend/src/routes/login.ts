@@ -60,6 +60,7 @@ try {
     }
 
 } catch (error) {
+    console.error(error)
     return res.status(401).json({error:"Try signing up"})
 }
 })
