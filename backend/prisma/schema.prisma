@@ -44,6 +44,7 @@ model User {
     role UserRole @default(USER)
     type UserType @default(STANDARD)
     workout WorkoutSession[]
+    workoutPlans WorkoutPlan[] 
 }
 
 model Exercise {
@@ -72,6 +73,7 @@ model SetLog {
 
 model WorkoutSession {
   id String @id @default(uuid())
+  name String
   userId String
   user User @relation(fields: [userId], references: [id])
   date DateTime @default(now())
@@ -87,4 +89,14 @@ model SessionExercise {
   exerciseId String
   exercise Exercise @relation(fields: [exerciseId], references: [id])
   sets        SetLog[]
+}
+
+model WorkoutPlan {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -5,6 +5,7 @@ import loginRouter from "./routes/login.ts";
 import signupRouter from "./routes/signup.ts"
 import dotenv from "dotenv"
 import exerciseRouter from "./routes/exercises.ts";
+import sessionWorkoutRouter from "./routes/session.ts";
 
 dotenv.config()
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req,res)=>{
 app.use("/api/login", loginRouter);
 app.use("/api/signup", signupRouter)
 app.use('/api/exercise',exerciseRouter)
+app.use("/api/session",sessionWorkoutRouter)
 const PORT = Number(process.env.PORT) || 5174
 
 console.log(process.env.SECRETKEY)
