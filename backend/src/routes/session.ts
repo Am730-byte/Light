@@ -14,7 +14,7 @@ sessionWorkoutRouter.post("/workout", authMiddleware, async (req, res) => {
   if (!userId) {
     return res.status(401).json({ error: "couldn't find user" });
   }
-  
+
   try {
     const { name } = req.body;
     const { notes } = req.body;
@@ -33,38 +33,56 @@ sessionWorkoutRouter.post("/workout", authMiddleware, async (req, res) => {
   }
 });
 
-sessionWorkoutRouter.post("/workout/:sessionId/exercise", authMiddleware,async (req, res) => {
+sessionWorkoutRouter.post(
+  "/workout/:sessionId/exercise",
+  authMiddleware,
+  async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
     const userId = req.user.userId;
     if (!userId) {
       return res.status(401).json({ error: "couldn't find user" });
-    } 
-    try {
-        const sessionId = req.params.sessionId;
-        if(typeof sessionId !== "string") {
-          return res.status(404).json({error: "Session not found"})
-        }
-        console.log(sessionId)
-        const exerciseId = req.body.exerciseId;
-        if(!exerciseId) {
-          return res.status(404).json({error : "No exercise found"})
-        }
-        const sessionwork = await prisma.sessionExercise.create({
-          data:{
-
-            sessionId,
-            exerciseId
-          }
-        })
-
-        return res.status(201).json({message: "exercise added to the session", sessionwork})
-
-    } catch (error) {
-      console.error(error)
-          return res.status(500).json({error: "No session found"})
     }
-  });
+    try {
+      const sessionId = req.params.sessionId;
+      if (typeof sessionId !== "string") {
+        return res.status(404).json({ error: "Session not found" });
+      }
+      console.log(sessionId);
+      const exerciseId = req.body.exerciseId;
+      if (!exerciseId) {
+        return res.status(404).json({ error: "No exercise found" });
+      }
+
+      const session = await prisma.workoutSession.findFirst({
+        where: {
+          id: sessionId,
+          userId: req.user.userId,
+        },
+      });
+
+      if(!session){
+        return res.status(403).json({error: "couldn't find workout session"})
+      }
+
+      const sessionwork = await prisma.sessionExercise.create({
+        data: { 
+          sessionId,
+          exerciseId,
+        },
+      });
+
+      if(!sessionwork){
+        return res.status(403).json({error: "Couldn't authenticate user"})
+      }
+
+      return res.status(201).json({ message: "exercise added to the session", sessionwork });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "No session found" });
+    }
+  },
+);
 
 export default sessionWorkoutRouter;
