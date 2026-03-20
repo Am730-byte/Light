@@ -85,4 +85,36 @@ sessionWorkoutRouter.post(
   },
 );
 
+sessionWorkoutRouter.get("/workout/:sessionId", authMiddleware, async (req,res)=>{
+     const sessionId = req.params.sessionId
+     if(typeof sessionId !== "string") {
+      return res.status(400).json({error: "Invalid sessionId"})
+     }
+     if(!req.user){
+      return res.status(401).json({error: "Couldn't find user"})
+     }
+     try {
+     const session = await prisma.workoutSession.findFirst({
+      where:{
+        id: sessionId,
+        userId: req.user.userId
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+            sets: true
+          }
+        }
+      }
+     })
+
+     return res.json(session)
+    } catch (error){
+      return res.status(403).json({error: "Couldn't get the session details"})
+    }
+})
+
+
+
 export default sessionWorkoutRouter;

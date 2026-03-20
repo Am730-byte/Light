@@ -28,6 +28,7 @@ app.use("/api/signup", signupRouter)
 app.use('/api/exercise',exerciseRouter)
 app.use("/api/session",sessionWorkoutRouter)
 app.use("/api/sets", setsRouter)
+
 const PORT = Number(process.env.PORT) || 5174
 
 console.log(process.env.SECRETKEY)

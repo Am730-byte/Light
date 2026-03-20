@@ -89,6 +89,7 @@ model SessionExercise {
   exerciseId String
   exercise Exercise @relation(fields: [exerciseId], references: [id])
   sets        SetLog[]
+  @@unique([sessionId, exerciseId])
 }
 
 model WorkoutPlan {

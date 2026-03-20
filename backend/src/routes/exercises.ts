@@ -38,4 +38,6 @@ exerciseRouter.get("/exercises", authMiddleware, async (req,res)=>{
 }
 })
 
+
+
 export default exerciseRouter
