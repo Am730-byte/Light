@@ -23,8 +23,14 @@ setsRouter.post("/sets", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "sessionExerciseId is required" });
     }
 
-     if (!Number.isFinite(weight) || !Number.isInteger(set) || !Number.isInteger(rep)) {
-      return res.status(400).json({ error: "weight, set, and rep must be valid numbers" });
+    if (
+      !Number.isFinite(weight) ||
+      !Number.isInteger(set) ||
+      !Number.isInteger(rep)
+    ) {
+      return res
+        .status(400)
+        .json({ error: "weight, set, and rep must be valid numbers" });
     }
 
     const sessionExercise = await prisma.sessionExercise.findUnique({
@@ -56,43 +62,42 @@ setsRouter.post("/sets", authMiddleware, async (req, res) => {
   }
 });
 
-setsRouter.get("/sets/:sessionExerciseId", authMiddleware, async(req,res)=>{
-
-    const sessionExerciseId = req.params.sessionExerciseId
-    if(typeof sessionExerciseId !== "string"){
-        return res.status(401).json({error: "couldn't find session"})
-    }
-    if(!req.user){
-        return res.status(401).json({error: "user not found"})
-    }
-    const userId = req.user.userId
-    if (!userId) {
+setsRouter.get("/sets/:sessionExerciseId", authMiddleware, async (req, res) => {
+  const sessionExerciseId = req.params.sessionExerciseId;
+  if (typeof sessionExerciseId !== "string") {
+    return res.status(401).json({ error: "couldn't find session" });
+  }
+  if (!req.user) {
     return res.status(401).json({ error: "user not found" });
-    }
-    try {
-        const sessionExercise = await prisma.sessionExercise.findFirst({
-            where: {
-                id: sessionExerciseId,
-                session: { 
-                    userId,
-                }
-            }
-        })
-          if (!sessionExercise) {
+  }
+  const userId = req.user.userId;
+  if (!userId) {
+    return res.status(401).json({ error: "user not found" });
+  }
+  try {
+    const sessionExercise = await prisma.sessionExercise.findFirst({
+      where: {
+        id: sessionExerciseId,
+        session: {
+          userId,
+        },
+      },
+    });
+    if (!sessionExercise) {
       return res.status(403).json({ error: "session exercise not found" });
     }
     const sets = await prisma.setLog.findFirst({
-       where: {
-        sessionExerciseId
-    },
-    orderBy: {
-        set: "asc"
-    }
-    })
-    return res.status(200).json({sets})
-    }catch(error){
-       return res.status(500).json({error: "couldn't get the set data"})
-    }
-})
+      where: {
+        sessionExerciseId,
+      },
+      orderBy: {
+        set: "asc",
+      },
+    });
+    return res.status(200).json({ sets });
+  } catch (error) {
+    return res.status(500).json({ error: "couldn't get the set data" });
+  }
+});
 
 export default setsRouter;
