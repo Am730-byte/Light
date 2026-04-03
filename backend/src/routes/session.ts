@@ -5,6 +5,28 @@ import prisma from "../lib/prisma.ts";
 const sessionWorkoutRouter = express.Router();
 sessionWorkoutRouter.use(express.json());
 
+sessionWorkoutRouter.get("/workout", authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Couldn't find user" });
+  }
+
+  try {
+    const sessions = await prisma.workoutSession.findMany({
+      where: {
+        userId: req.user.userId,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    return res.json(sessions);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Couldn't get your sessions" });
+  }
+});
+
 sessionWorkoutRouter.post("/workout", authMiddleware, async (req, res) => {
   //res.json("hello this is serverRouter")
   if (!req.user) {
