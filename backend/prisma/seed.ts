@@ -3,6 +3,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 import csv from "csv-parser"
 import prisma from "../src/lib/prisma.ts"
+import { getExerciseInstructions } from "../src/lib/exercise-instructions.ts"
 
 type CsvExerciseRow = {
   name: string
@@ -68,6 +69,12 @@ async function main() {
         equipment,
         primarymuscle: row.primary_muscle,
         secondarymuscle,
+        instructions: getExerciseInstructions({
+          name: row.name,
+          equipment,
+          primarymuscle: row.primary_muscle,
+          secondarymuscle,
+        }),
         source,
         sourcetype,
       },
@@ -77,6 +84,12 @@ async function main() {
         equipment,
         primarymuscle: row.primary_muscle,
         secondarymuscle,
+        instructions: getExerciseInstructions({
+          name: row.name,
+          equipment,
+          primarymuscle: row.primary_muscle,
+          secondarymuscle,
+        }),
         source,
         sourcetype,
       },

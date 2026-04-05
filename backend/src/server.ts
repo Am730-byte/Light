@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 import exerciseRouter from "./routes/exercises.ts";
 import sessionWorkoutRouter from "./routes/session.ts";
 import setsRouter from "./routes/sets.ts";
+import profileRouter from "./routes/profile.ts";
 
 dotenv.config()
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/signup", signupRouter)
 app.use('/api/exercise',exerciseRouter)
 app.use("/api/session",sessionWorkoutRouter)
 app.use("/api/sets", setsRouter)
+app.use("/api/profile", profileRouter)
 
 const PORT = Number(process.env.PORT) || 5174
 

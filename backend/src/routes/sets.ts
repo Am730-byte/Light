@@ -100,4 +100,43 @@ setsRouter.get("/sets/:sessionExerciseId", authMiddleware, async (req, res) => {
   }
 });
 
+setsRouter.delete("/sets/:setId", authMiddleware, async (req, res) => {
+  const setId = req.params.setId;
+  if (typeof setId !== "string") {
+    return res.status(400).json({ error: "Invalid set id" });
+  }
+
+  if (!req.user) {
+    return res.status(401).json({ error: "user not found" });
+  }
+
+  try {
+    const setLog = await prisma.setLog.findFirst({
+      where: {
+        id: setId,
+        sessionExercise: {
+          session: {
+            userId: req.user.userId,
+          },
+        },
+      },
+    });
+
+    if (!setLog) {
+      return res.status(404).json({ error: "Set not found" });
+    }
+
+    await prisma.setLog.delete({
+      where: {
+        id: setId,
+      },
+    });
+
+    return res.status(200).json({ message: "Set deleted" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Could not delete set" });
+  }
+});
+
 export default setsRouter;

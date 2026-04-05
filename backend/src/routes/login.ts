@@ -33,7 +33,7 @@ loginRouter.post("/login", async (req, res) => {
           return res.status(403).json({ error: "No key found" });
         }
         const token = jwt.sign({ userId: loggedmail.id }, secret, {
-          expiresIn: "1h",
+          expiresIn: "360h",
         });
 
         const days = 15;
