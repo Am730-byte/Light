@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+html,
+body {
+  min-height: 100%;
+  background: #09090b;
+}
+
+body {
+  color: #f4f4f5;
+}
+
+.exercise-video::-webkit-media-controls {
+  display: none !important;
+}
+
+.exercise-video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.exercise-video::-webkit-media-controls-panel {
+  display: none !important;
+}
