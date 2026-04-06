@@ -22,6 +22,7 @@ function isAllowedOrigin(origin: string) {
   const configuredFrontendOrigin = process.env.FRONTEND_URL
     ? normalizeOrigin(process.env.FRONTEND_URL)
     : null;
+  const isVercelPreview = /^https:\/\/.*\.vercel\.app$/.test(normalizedOrigin);
 
   if (!configuredFrontendOrigin && !isProduction) {
     return normalizedOrigin === "http://localhost:3000";
@@ -29,6 +30,7 @@ function isAllowedOrigin(origin: string) {
 
   return (
     normalizedOrigin === configuredFrontendOrigin ||
+    isVercelPreview ||
     (!isProduction && normalizedOrigin === "http://localhost:3000")
   );
 }
@@ -46,7 +48,8 @@ app.use(cors({
 
         return callback(null, false);
     },
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus: 204,
 }));
 
 app.get("/", (req,res)=>{
