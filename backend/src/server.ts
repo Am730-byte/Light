@@ -12,10 +12,26 @@ import profileRouter from "./routes/profile.ts";
 dotenv.config()
 const app = express(); 
 const isProduction = process.env.NODE_ENV === "production";
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  !isProduction ? "http://localhost:3000" : null,
-].filter((origin): origin is string => Boolean(origin));
+
+function normalizeOrigin(origin: string) {
+  return origin.replace(/\/+$/, "");
+}
+
+function isAllowedOrigin(origin: string) {
+  const normalizedOrigin = normalizeOrigin(origin);
+  const configuredFrontendOrigin = process.env.FRONTEND_URL
+    ? normalizeOrigin(process.env.FRONTEND_URL)
+    : null;
+
+  if (!configuredFrontendOrigin && !isProduction) {
+    return normalizedOrigin === "http://localhost:3000";
+  }
+
+  return (
+    normalizedOrigin === configuredFrontendOrigin ||
+    (!isProduction && normalizedOrigin === "http://localhost:3000")
+  );
+}
 
 app.set("trust proxy", 1);
 app.use(express.json())
@@ -24,11 +40,11 @@ app.use(cookieParser())
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || isAllowedOrigin(origin)) {
             return callback(null, true);
         }
 
-        return callback(new Error("Not allowed by CORS"));
+        return callback(null, false);
     },
     credentials: true
 }));
