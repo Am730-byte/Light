@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 type WorkoutSession = {
   id: string;
@@ -21,12 +21,7 @@ export default function YourSessionsPage() {
 
   async function fetchSessions() {
     try {
-      const response = await axios.get(
-        "http://localhost:5173/api/session/workout",
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await api.get("/api/session/workout");
       setSessions(response.data);
       setError("");
     } catch (error) {
@@ -43,9 +38,7 @@ export default function YourSessionsPage() {
 
   async function handleDeleteSession(sessionId: string) {
     try {
-      await axios.delete(`http://localhost:5173/api/session/workout/${sessionId}`, {
-        withCredentials: true,
-      });
+      await api.delete(`/api/session/workout/${sessionId}`);
       setSessions((current) => current.filter((session) => session.id !== sessionId));
     } catch (error) {
       console.error(error);

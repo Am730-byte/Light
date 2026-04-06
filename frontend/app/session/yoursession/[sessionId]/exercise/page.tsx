@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import axios from "axios";
 import { useEffect, useState, type SubmitEvent } from "react";
 import { useParams } from "next/navigation";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 type Exercise = {
   id: string;
@@ -42,12 +42,7 @@ type SetDraft = {
 };
 
 async function getSession(sessionId: string) {
-  const response = await axios.get(
-    `http://localhost:5173/api/session/workout/${sessionId}`,
-    {
-      withCredentials: true,
-    },
-  );
+  const response = await api.get(`/api/session/workout/${sessionId}`);
 
   return response.data;
 }
@@ -69,11 +64,10 @@ export default function ExercisePage() {
     setCatalogLoading(true);
 
     try {
-      const response = await axios.get(
-        "http://localhost:5173/api/exercise/exercises",
+      const response = await api.get(
+        "/api/exercise/exercises",
         {
           params: searchValue ? { search: searchValue } : {},
-          withCredentials: true,
         },
       );
 
@@ -111,13 +105,10 @@ export default function ExercisePage() {
 
   async function handleAddExercise(exerciseId: string) {
     try {
-      await axios.post(
-        `http://localhost:5173/api/session/workout/${sessionId}/exercise`,
+      await api.post(
+        `/api/session/workout/${sessionId}/exercise`,
         {
           exerciseId,
-        },
-        {
-          withCredentials: true,
         },
       );
 
@@ -133,11 +124,8 @@ export default function ExercisePage() {
 
   async function handleDeleteExercise(sessionExerciseId: string) {
     try {
-      await axios.delete(
-        `http://localhost:5173/api/session/workout/${sessionId}/exercise/${sessionExerciseId}`,
-        {
-          withCredentials: true,
-        },
+      await api.delete(
+        `/api/session/workout/${sessionId}/exercise/${sessionExerciseId}`,
       );
 
       setMessage("Exercise deleted");
@@ -180,16 +168,13 @@ export default function ExercisePage() {
     }
 
     try {
-      await axios.post(
-        "http://localhost:5173/api/sets/sets",
+      await api.post(
+        "/api/sets/sets",
         {
           sessionExerciseId,
           weight: Number(draft.weight),
           set: Number(draft.set),
           rep: Number(draft.rep),
-        },
-        {
-          withCredentials: true,
         },
       );
 
@@ -213,9 +198,7 @@ export default function ExercisePage() {
 
   async function handleDeleteSet(setId: string) {
     try {
-      await axios.delete(`http://localhost:5173/api/sets/sets/${setId}`, {
-        withCredentials: true,
-      });
+      await api.delete(`/api/sets/sets/${setId}`);
 
       setMessage("Set deleted");
       setError("");

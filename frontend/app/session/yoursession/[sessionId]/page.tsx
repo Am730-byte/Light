@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 type SetLog = {
   id: string;
@@ -47,12 +47,7 @@ export default function YourSession() {
   useEffect(() => {
     async function fetchSession() {
       try {
-        const response = await axios.get(
-          `http://localhost:5173/api/session/workout/${sessionId}`,
-          {
-            withCredentials: true,
-          },
-        );
+        const response = await api.get(`/api/session/workout/${sessionId}`);
         setSession(response.data);
       } catch (error) {
         console.error(error);
@@ -96,12 +91,7 @@ export default function YourSession() {
                 type="button"
                 onClick={async () => {
                   try {
-                    await axios.delete(
-                      `http://localhost:5173/api/session/workout/${session.id}`,
-                      {
-                        withCredentials: true,
-                      },
-                    );
+                    await api.delete(`/api/session/workout/${session.id}`);
                     router.push("/session/yoursession");
                   } catch (error) {
                     console.error(error);

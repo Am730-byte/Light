@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { SubmitEvent } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -18,16 +18,13 @@ export default function SignupPage() {
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:5173/api/signup/signup",
+      await api.post(
+        "/api/signup/signup",
         {
           name,
           userName,
           email,
           password,
-        },
-        {
-          withCredentials: true,
         },
       );
       router.push("/dashboard");

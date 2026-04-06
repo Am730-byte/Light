@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import axios from "axios";
 import { useState, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 export default function CreateFunction() {
   const [name, setName] = useState("");
@@ -15,14 +15,11 @@ export default function CreateFunction() {
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5173/api/session/workout",
+      const response = await api.post(
+        "/api/session/workout",
         {
           name,
           notes,
-        },
-        {
-          withCredentials: true,
         },
       );
       router.push(`/session/yoursession/${response.data.id}`);

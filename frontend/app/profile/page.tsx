@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 type User = {
   id: string;
@@ -25,9 +25,7 @@ export default function Profile() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.get("http://localhost:5173/api/profile/me", {
-          withCredentials: true,
-        });
+        const response = await api.get("/api/profile/me");
         setUser(response.data);
       } catch (error) {
         console.error(error);

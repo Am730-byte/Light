@@ -10,13 +10,26 @@ import setsRouter from "./routes/sets.ts";
 import profileRouter from "./routes/profile.ts";
 
 dotenv.config()
-const app = express();
+const app = express(); 
+const isProduction = process.env.NODE_ENV === "production";
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  !isProduction ? "http://localhost:3000" : null,
+].filter((origin): origin is string => Boolean(origin));
+
+app.set("trust proxy", 1);
 app.use(express.json())
 app.use(cookieParser())
 
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true
 }));
 
@@ -33,10 +46,6 @@ app.use("/api/profile", profileRouter)
 
 const PORT = Number(process.env.PORT) || 5174
 
-console.log(process.env.SECRETKEY)
-
 app.listen(PORT, ()=>{
     console.log(`Server is running on ${PORT}`)
 })
-
-console.log(process.env.DATABASE_URL)

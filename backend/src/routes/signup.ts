@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import { signupSchema } from "../schema/zodSchema.ts";
 import prisma from "../lib/prisma.ts"
 import jwt from "jsonwebtoken"
+import { getAuthCookieOptions } from "../lib/auth-cookie.ts";
 
 
 const signupRouter = express.Router();
@@ -38,7 +39,6 @@ signupRouter.post("/signup", async (req, res) => {
                 }
             })
             const secret = process.env.SECRETKEY
-            console.log(process.env.SECRETKEY)
             if(!secret){
                 return res.status(500).json({error: "Server Error"})
             }
@@ -48,14 +48,7 @@ signupRouter.post("/signup", async (req, res) => {
                 {expiresIn:"1h"}
             )
             
-            const days = 15
-            res.cookie("token", token,{
-                httpOnly:true,
-                maxAge: days*24*60*60*1000,
-                sameSite:"strict",
-                path:"/",
-                secure:false
-            })
+            res.cookie("token", token, getAuthCookieOptions())
             return res.status(201).json({ message: "User Created"})
 
         }
@@ -69,4 +62,3 @@ signupRouter.post("/signup", async (req, res) => {
 })
 
 export default signupRouter;
-

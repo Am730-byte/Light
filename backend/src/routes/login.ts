@@ -3,6 +3,7 @@ import { loginSchema } from "../schema/zodSchema.ts";
 import prisma from "../lib/prisma.ts";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getAuthCookieOptions } from "../lib/auth-cookie.ts";
 
 const loginRouter = express.Router();
 loginRouter.use(express.json());
@@ -36,14 +37,7 @@ loginRouter.post("/login", async (req, res) => {
           expiresIn: "360h",
         });
 
-        const days = 15;
-        res.cookie("token", token, {
-          httpOnly: true,
-          maxAge: days * 24 * 60 * 60 * 1000,
-          secure: false,
-          sameSite: "strict",
-          path: "/",
-        });
+        res.cookie("token", token, getAuthCookieOptions());
 
         return res.status(200).json({
           message: "user logged in successfully",

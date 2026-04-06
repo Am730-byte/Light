@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import SiteNav from "@/components/site-nav";
+import { api } from "@/lib/api";
 
 type Exercise = {
   id: string;
@@ -59,11 +59,10 @@ export default function Exercises() {
     setLoading(true);
 
     try {
-      const response = await axios.get(
-        "http://localhost:5173/api/exercise/exercises",
+      const response = await api.get(
+        "/api/exercise/exercises",
         {
           params: searchValue ? { search: searchValue } : {},
-          withCredentials: true,
         },
       );
       setExercises(response.data);

@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"npx ts-node-esm src/server.ts"
+    "dev":"npx ts-node-esm src/server.ts",
+    "start":"npx ts-node-esm src/server.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
